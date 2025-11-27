@@ -7,8 +7,8 @@
 <style>
   body { font-family: Arial, sans-serif; margin: 20px; }
   h1 { font-size: 1.5em; margin-bottom: 10px; }
-  h2 { margin-top: 25px; font-size: 1.2em; }
-  .module { border: 1px solid #ccc; padding: 15px; margin-top: 15px; border-radius: 5px; background-color: #f9f9f9; }
+  h2 { margin-top: 25px; font-size: 1.2em; cursor: pointer; }
+  .module { border: 1px solid #ccc; padding: 10px 15px; margin-top: 10px; border-radius: 5px; background-color: #f9f9f9; display: none; }
   label { display: block; margin-top: 10px; }
   select, textarea, input[type="text"] { width: 100%; margin-top: 5px; padding: 5px; font-size: 1em; }
   input[type="checkbox"] { margin-right: 5px; }
@@ -62,7 +62,7 @@
   <label>除了具体系统，您最希望数字化系统或新建系统能帮忙解决的问题是什么？（可包括目前线下流程的痛点） / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข (รวมถึงกระบวนการปัจจุบันที่ยังทำแบบออฟไลน์)</label>
   <textarea name="global_wish" rows="4"></textarea>
 
-  <button type="submit">提交 / Submit</button>
+  <button type="submit" id="submitBtn">提交 / Submit</button>
 </form>
 
 <script>
@@ -82,106 +82,103 @@ function renderModules(selectedSystems) {
     const moduleDiv = document.createElement('div');
     moduleDiv.className = 'module';
     moduleDiv.innerHTML = `
-      <h2>${system} 系统模块调查 / แบบสอบถามระบบ ${system}</h2>
+      <h2 class="toggle">${system} 系统模块调查 / แบบสอบถามระบบ ${system}</h2>
+      <div class="moduleContent">
+        <label>每天大约使用 ${system} 系统多少次？ / คุณใช้งานระบบ ${system} วันละกี่ครั้ง?</label>
+        <select name="${system}_frequency" required>
+          <option value="">请选择 / โปรดเลือก</option>
+          <option value="1 次 / 1 ครั้ง">1 次 / 1 ครั้ง</option>
+          <option value="2–3 次 / 2–3 ครั้ง">2–3 次 / 2–3 ครั้ง</option>
+          <option value="4–5 次 / 4–5 ครั้ง">4–5 次 / 4–5 ครั้ง</option>
+          <option value="5 次以上 / มากกว่า 5 ครั้ง">5 次以上 / มากกว่า 5 ครั้ง</option>
+        </select>
 
-      <label>每天大约使用 ${system} 系统多少次？ / คุณใช้งานระบบ ${system} วันละกี่ครั้ง?</label>
-      <select name="${system}_frequency" required>
-        <option value="">请选择 / โปรดเลือก</option>
-        <option value="1 次 / 1 ครั้ง">1 次 / 1 ครั้ง</option>
-        <option value="2–3 次 / 2–3 ครั้ง">2–3 次 / 2–3 ครั้ง</option>
-        <option value="4–5 次 / 4–5 ครั้ง">4–5 次 / 4–5 ครั้ง</option>
-        <option value="5 次以上 / มากกว่า 5 ครั้ง">5 次以上 / มากกว่า 5 ครั้ง</option>
-      </select>
+        <label>每次操作该系统平均耗时多久？ / ใช้เวลาต่อครั้งโดยประมาณเท่าไหร่</label>
+        <select name="${system}_duration" required>
+          <option value="">请选择 / โปรดเลือก</option>
+          <option value="<5 分钟 / <5 นาที"><5 分钟 / <5 นาที</option>
+          <option value="5–15 分钟 / 5–15 นาที">5–15 分钟 / 5–15 นาที</option>
+          <option value="15–30 分钟 / 15–30 นาที">15–30 分钟 / 15–30 นาที</option>
+          <option value=">30 分钟 / >30 นาที">>30 分钟 / >30 นาที</option>
+        </select>
 
-      <label>每次操作该系统平均耗时多久？ / ใช้เวลาต่อครั้งโดยประมาณเท่าไหร่</label>
-      <select name="${system}_duration" required>
-        <option value="">请选择 / โปรดเลือก</option>
-        <option value="<5 分钟 / <5 นาที"><5 分钟 / <5 นาที</option>
-        <option value="5–15 分钟 / 5–15 นาที">5–15 分钟 / 5–15 นาที</option>
-        <option value="15–30 分钟 / 15–30 นาที">15–30 分钟 / 15–30 นาที</option>
-        <option value=">30 分钟 / >30 นาที">>30 分钟 / >30 นาที</option>
-      </select>
+        <label>是否能独立完成日常操作（无需 IT 或跨部门协助）？ / คุณสามารถทำงานเองโดยไม่ต้องพึ่ง IT หรือฝ่ายอื่นหรือไม่?</label>
+        <select name="${system}_independent" required>
+          <option value="">请选择 / โปรดเลือก</option>
+          <option value="完全独立 / ใช้ได้ด้วยตนเองทั้งหมด">完全独立 / ใช้ได้ด้วยตนเองทั้งหมด</option>
+          <option value="大部分独立，偶尔需要协助 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง">大部分独立，偶尔需要协助 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง</option>
+          <option value="经常需要 IT 协助 / ต้องพึ่ง IT บ่อยครั้ง">经常需要 IT 协助 / ต้องพึ่ง IT บ่อยครั้ง</option>
+          <option value="经常需要跨部门协作 / ต้องพึ่งฝ่ายอื่นบ่อยครั้ง">经常需要跨部门协作 / ต้องพึ่งฝ่ายอื่นบ่อยครั้ง</option>
+          <option value="完全不能独立完成 / ไม่สามารถใช้งานเองได้">完全不能独立完成 / ไม่สามารถใช้งานเองได้</option>
+        </select>
 
-      <label>是否能独立完成日常操作（无需 IT 或跨部门协助）？ / คุณสามารถทำงานเองโดยไม่ต้องพึ่ง IT หรือฝ่ายอื่นหรือไม่?</label>
-      <select name="${system}_independent" required>
-        <option value="">请选择 / โปรดเลือก</option>
-        <option value="完全独立 / ใช้ได้ด้วยตนเองทั้งหมด">完全独立 / ใช้ได้ด้วยตนเองทั้งหมด</option>
-        <option value="大部分独立，偶尔需要协助 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง">大部分独立，偶尔需要协助 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง</option>
-        <option value="经常需要 IT 协助 / ต้องพึ่ง IT บ่อยครั้ง">经常需要 IT 协助 / ต้องพึ่ง IT บ่อยครั้ง</option>
-        <option value="经常需要跨部门协作 / ต้องพึ่งฝ่ายอื่นบ่อยครั้ง">经常需要跨部门协作 / ต้องพึ่งฝ่ายอื่นบ่อยครั้ง</option>
-        <option value="完全不能独立完成 / ไม่สามารถใช้งานเองได้">完全不能独立完成 / ไม่สามารถใช้งานเองได้</option>
-      </select>
+        <label>每天大约需要多少次 IT 协助？ / ต้องพึ่ง IT ประมาณกี่ครั้งต่อวัน</label>
+        <select name="${system}_it_support" required>
+          <option value="">请选择 / โปรดเลือก</option>
+          <option value="0 次 / 0 ครั้ง">0 次 / 0 ครั้ง</option>
+          <option value="1 次 / 1 ครั้ง">1 次 / 1 ครั้ง</option>
+          <option value="2–3 次 / 2–3 ครั้ง">2–3 次 / 2–3 ครั้ง</option>
+          <option value="4–5 次 / 4–5 ครั้ง">4–5 次 / 4–5 ครั้ง</option>
+          <option value="5 次以上 / มากกว่า 5 ครั้ง">5 次以上 / มากกว่า 5 ครั้ง</option>
+        </select>
 
-      <label>每天大约需要多少次 IT 协助？ / ต้องพึ่ง IT ประมาณกี่ครั้งต่อวัน</label>
-      <select name="${system}_it_support" required>
-        <option value="">请选择 / โปรดเลือก</option>
-        <option value="0 次 / 0 ครั้ง">0 次 / 0 ครั้ง</option>
-        <option value="1 次 / 1 ครั้ง">1 次 / 1 ครั้ง</option>
-        <option value="2–3 次 / 2–3 ครั้ง">2–3 次 / 2–3 ครั้ง</option>
-        <option value="4–5 次 / 4–5 ครั้ง">4–5 次 / 4–5 ครั้ง</option>
-        <option value="5 次以上 / มากกว่า 5 ครั้ง">5 次以上 / มากกว่า 5 ครั้ง</option>
-      </select>
+        <label>需要 IT 协助的主要原因（可多选） / สาเหตุหลักที่ต้องพึ่ง IT (เลือกได้หลายข้อ)</label>
+        ${['系统操作不熟 / ไม่คุ้นเคยการใช้งาน','系统功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug','数据不正确 / ข้อมูลไม่ถูกต้อง','权限问题 / ปัญหาสิทธิ์','流程需要跨部门沟通 / กระบวนการต้องประสานกับฝ่ายอื่น','紧急问题（需当天解决） / ปัญหาเร่งด่วน (ต้องแก้ไขภายในวันเดียว)','其他 / อื่นๆ'].map(reason => `<label><input type="checkbox" name="${system}_it_reason" value="${reason}"> ${reason}</label>`).join('')}
 
-      <label>需要 IT 协助的主要原因（可多选） / สาเหตุหลักที่ต้องพึ่ง IT (เลือกได้หลายข้อ)</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="系统操作不熟 / ไม่คุ้นเคยการใช้งาน"> 系统操作不熟 / ไม่คุ้นเคยการใช้งาน</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="系统功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug"> 系统功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="数据不正确 / ข้อมูลไม่ถูกต้อง"> 数据不正确 / ข้อมูลไม่ถูกต้อง</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="权限问题 / ปัญหาสิทธิ์"> 权限问题 / ปัญหาสิทธิ์</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="流程需要跨部门沟通 / กระบวนการต้องประสานกับฝ่ายอื่น"> 流程需要跨部门沟通 / กระบวนการต้องประสานกับฝ่ายอื่น</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="紧急问题（需当天解决） / ปัญหาเร่งด่วน (ต้องแก้ไขภายในวันเดียว)"> 紧急问题（需当天解决） / ปัญหาเร่งด่วน (ต้องแก้ไขภายในวันเดียว)</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="其他 / อื่นๆ"> 其他 / อื่นๆ</label>
+        <label>在使用该系统完成工作时，是否需要与其他部门沟通？ / ในการใช้งานระบบนี้ ต้องประสานงานกับฝ่ายอื่นหรือไม่?</label>
+        <select name="${system}_cross_department" required>
+          <option value="">请选择 / โปรดเลือก</option>
+          <option value="经常需要 / ต้องประสานบ่อยครั้ง">经常需要 / ต้องประสานบ่อยครั้ง</option>
+          <option value="偶尔需要 / บางครั้ง">偶尔需要 / บางครั้ง</option>
+          <option value="基本不需要 / แทบไม่ต้อง">基本不需要 / แทบไม่ต้อง</option>
+        </select>
 
-      <label>在使用该系统完成工作时，是否需要与其他部门沟通？ / ในการใช้งานระบบนี้ ต้องประสานงานกับฝ่ายอื่นหรือไม่?</label>
-      <select name="${system}_cross_department" required>
-        <option value="">请选择 / โปรดเลือก</option>
-        <option value="经常需要 / ต้องประสานบ่อยครั้ง">经常需要 / ต้องประสานบ่อยครั้ง</option>
-        <option value="偶尔需要 / บางครั้ง">偶尔需要 / บางครั้ง</option>
-        <option value="基本不需要 / แทบไม่ต้อง">基本不需要 / แทบไม่ต้อง</option>
-      </select>
+        <label>您对该系统的整体满意度如何？（1=非常不满意，5=非常满意） / คุณพอใจกับระบบมากน้อยแค่ไหน (1=ไม่พอใจมาก,5=พอใจมาก)</label>
+        <select name="${system}_satisfaction" required>
+          <option value="">请选择 / โปรดเลือก</option>
+          <option value="1">1 - 非常不满意 / ไม่พอใจมาก</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 - 非常满意 / พอใจมาก</option>
+        </select>
 
-      <label>您对该系统的整体满意度如何？（1=非常不满意，5=非常满意） / คุณพอใจกับระบบมากน้อยแค่ไหน (1=ไม่พอใจมาก,5=พอใจมาก)</label>
-      <select name="${system}_satisfaction" required>
-        <option value="">请选择 / โปรดเลือก</option>
-        <option value="1">1 - 非常不满意 / ไม่พอใจมาก</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5 - 非常满意 / พอใจมาก</option>
-      </select>
+        <label>希望系统在哪些方面改进（可多选） / ระบบควรพัฒนาด้านใด (เลือกได้หลายข้อ)</label>
+        ${['功能 / ฟังก์ชัน','流程 / กระบวนการ','培训 / การฝึกอบรม','界面 / UI','权限 / 权限','其他 / อื่นๆ'].map(i => `<label><input type="checkbox" name="${system}_improve" value="${i}"> ${i}</label>`).join('')}
 
-      <label>希望系统在哪些方面改进（可多选） / ระบบควรพัฒนาด้านใด (เลือกได้หลายข้อ)</label>
-      <label><input type="checkbox" name="${system}_improve" value="功能 / ฟังก์ชัน"> 功能 / ฟังก์ชัน</label>
-      <label><input type="checkbox" name="${system}_improve" value="流程 / กระบวนการ"> 流程 / กระบวนการ</label>
-      <label><input type="checkbox" name="${system}_improve" value="培训 / การฝึกอบรม"> 培训 / การฝึกอบรม</label>
-      <label><input type="checkbox" name="${system}_improve" value="界面 / ส่วนติดต่อผู้ใช้"> 界面 / UI</label>
-      <label><input type="checkbox" name="${system}_improve" value="权限 / สิทธิ์"> 权限 / 权限</label>
-      <label><input type="checkbox" name="${system}_improve" value="其他 / อื่นๆ"> 其他 / อื่นๆ</label>
-
-      <label>您最希望该系统或新系统能帮您解决的问题是什么？（可包括线下流程痛点） / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข (รวมถึงกระบวนการปัจจุบันที่ยังทำแบบออฟไลน์)</label>
-      <textarea name="${system}_wish" rows="3"></textarea>
+        <label>您最希望该系统或新系统能帮您解决的问题是什么？（可包括线下流程痛点） / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข (รวมถึงกระบวนการปัจจุบันที่ยังทำแบบออฟไลน์)</label>
+        <textarea name="${system}_wish" rows="3"></textarea>
+      </div>
     `;
     modulesContainer.appendChild(moduleDiv);
+
+    // 添加折叠功能
+    const toggle = moduleDiv.querySelector('.toggle');
+    const content = moduleDiv.querySelector('.moduleContent');
+    toggle.addEventListener('click', () => {
+      content.style.display = content.style.display === 'none' ? 'block' : 'none';
+    });
   });
 }
 
 // 表单提交事件
 document.getElementById('surveyForm').addEventListener('submit', function(e) {
   e.preventDefault();
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
 
   // 收集表单数据
   const formData = new FormData(this);
   const obj = {};
   formData.forEach((value, key) => {
-    if (obj[key]) { // 处理多选
+    if (obj[key]) {
       if (Array.isArray(obj[key])) obj[key].push(value);
       else obj[key] = [obj[key], value];
-    } else {
-      obj[key] = value;
-    }
+    } else obj[key] = value;
   });
 
-  // 发送到 Google Apps Script
-  fetch('https://script.google.com/macros/s/AKfycbxJMgTQIV3TS6QVQ3QjOXHxEqkHBrRXXU2h793C7AA3VRlbIRinNFNcKl3dCGFtwW8g/exec', { // 替换为你的 Web App URL
+  // 提交到 Google Apps Script Web App
+  fetch('https://script.google.com/macros/s/AKfycbyHH8ILooOaUx_RX-RmxdaGb9YCq-hy0L97N8p7Aucb9k0z_7mXJUMvw4tBo8Okr0Ky/exec', { // 替换为你的 Web App URL
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(obj)
@@ -191,14 +188,15 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
     alert('表单已提交，谢谢参与 / แบบสอบถามถูกส่งเรียบร้อย ขอบคุณสำหรับการเข้าร่วม');
     document.getElementById('surveyForm').reset();
     modulesContainer.innerHTML = '';
+    submitBtn.disabled = false;
   })
   .catch(err => {
     alert('提交失败，请重试 / ส่งไม่สำเร็จ กรุณาลองใหม่');
     console.error(err);
+    submitBtn.disabled = false;
   });
 });
 </script>
 
 </body>
 </html>
-

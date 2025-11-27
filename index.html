@@ -166,12 +166,39 @@ function renderModules(selectedSystems) {
 
 // 表单提交事件
 document.getElementById('surveyForm').addEventListener('submit', function(e) {
-  e.preventDefault(); // 阻止默认提交
-  alert('表单已提交，谢谢参与 / แบบสอบถามถูกส่งเรียบร้อย ขอบคุณสำหรับการเข้าร่วม');
-  this.reset();
-  modulesContainer.innerHTML = '';
+  e.preventDefault();
+
+  // 收集表单数据
+  const formData = new FormData(this);
+  const obj = {};
+  formData.forEach((value, key) => {
+    if (obj[key]) { // 处理多选
+      if (Array.isArray(obj[key])) obj[key].push(value);
+      else obj[key] = [obj[key], value];
+    } else {
+      obj[key] = value;
+    }
+  });
+
+  // 发送到 Google Apps Script
+  fetch('https://script.google.com/macros/s/AKfycbxJMgTQIV3TS6QVQ3QjOXHxEqkHBrRXXU2h793C7AA3VRlbIRinNFNcKl3dCGFtwW8g/exec', { // 替换为你的 Web App URL
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(obj)
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert('表单已提交，谢谢参与 / แบบสอบถามถูกส่งเรียบร้อย ขอบคุณสำหรับการเข้าร่วม');
+    document.getElementById('surveyForm').reset();
+    modulesContainer.innerHTML = '';
+  })
+  .catch(err => {
+    alert('提交失败，请重试 / ส่งไม่สำเร็จ กรุณาลองใหม่');
+    console.error(err);
+  });
 });
 </script>
 
 </body>
 </html>
+

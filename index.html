@@ -18,12 +18,12 @@
 <body>
 
 <h1>乖宝（泰国）工厂数字化系统使用情况调查（匿名）</h1>
-<p>为了更好地推动数字化系统落地并优化培训与流程，我们希望了解各系统的真实使用情况。此问卷匿名，数据仅用于系统改进。<br>
-เพื่อพัฒนาการใช้งานระบบดิจิทัลของโรงงาน Gambol ประเทศไทย และปรับปรุงการฝึกอบรมและกระบวนการ เราต้องการข้อมูลการใช้งานจริงแบบไม่ระบุชื่อ ข้อมูลนี้ใช้เพื่อปรับปรุงระบบเท่านั้น</p>
+<p>
+为了更好地推动数字化系统落地并优化培训与流程，我们希望了解各系统的真实使用情况。此问卷匿名，数据仅用于系统改进。<br>
+เพื่อพัฒนาการใช้งานระบบดิจิทัลของโรงงาน Gambol ประเทศไทย และปรับปรุงการฝึกอบรมและกระบวนการ เราต้องการข้อมูลการใช้งานจริงแบบไม่ระบุชื่อ ข้อมูลนี้ใช้เพื่อปรับปรุงระบบเท่านั้น
+</p>
 
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-
-<form id="surveyForm" action="YOUR_DEPLOYED_SCRIPT_URL_HERE" method="POST" target="hidden_iframe">
+<form id="surveyForm" action="https://script.google.com/macros/s/AKfycbw08l_H8TQYcAlAfCfsKPzCXklKNErH2bu21FT-Kmn3gzQubzIdMjNe-cAQe-8Ng5o4/exec" method="post" target="hidden_iframe">
 
   <!-- 部门选择 -->
   <label>您所在的部门 / แผนกของคุณ</label>
@@ -48,37 +48,43 @@
   <!-- 系统选择 -->
   <label>请选择您日常使用的系统 / กรุณาเลือกระบบที่คุณใช้งานประจำวัน</label>
   <div id="systemCheckboxes">
-    <label><input type="checkbox" name="systems" value="生管 MES"> 生管 MES / MES การผลิต</label>
-    <label><input type="checkbox" name="systems" value="QMS"> QMS / QMS</label>
-    <label><input type="checkbox" name="systems" value="WMS"> WMS / WMS</label>
-    <label><input type="checkbox" name="systems" value="OA"> OA / OA</label>
-    <label><input type="checkbox" name="systems" value="ERP"> ERP / ERP</label>
-    <label><input type="checkbox" name="systems" value="PLM"> PLM / PLM</label>
+    <label><input type="checkbox" name="systems" value="生管 MES"> 生管 MES</label>
+    <label><input type="checkbox" name="systems" value="QMS"> QMS</label>
+    <label><input type="checkbox" name="systems" value="WMS"> WMS</label>
+    <label><input type="checkbox" name="systems" value="OA"> OA</label>
+    <label><input type="checkbox" name="systems" value="ERP"> ERP</label>
+    <label><input type="checkbox" name="systems" value="PLM"> PLM</label>
   </div>
 
+  <!-- 动态模块 -->
   <div id="modulesContainer"></div>
 
+  <!-- 整体反馈 -->
   <h2>整体反馈 / ความคิดเห็นโดยรวม</h2>
-  <label>除了具体系统，您最希望数字化系统或新建系统能帮忙解决的问题是什么？（可包括线下流程痛点） / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข (รวมถึงกระบวนการปัจจุบันที่ยังทำแบบออฟไลน์)</label>
+  <label>除了具体系统，您最希望数字化系统或新建系统能帮忙解决的问题是什么？（可包括目前线下流程的痛点） / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข (รวมถึงกระบวนการปัจจุบันที่ยังทำแบบออฟไลน์)</label>
   <textarea name="global_wish" rows="4"></textarea>
 
-  <button type="submit">提交 / Submit / ส่ง</button>
+  <button type="submit">提交 / Submit</button>
 </form>
 
+<!-- 用 iframe 提交避免跳转 -->
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
 <script>
+const systems = ['生管 MES','QMS','WMS','OA','ERP','PLM'];
 const modulesContainer = document.getElementById('modulesContainer');
 
 document.getElementById('systemCheckboxes').addEventListener('change', () => {
-  const selected = Array.from(document.querySelectorAll('input[name="systems"]:checked')).map(cb => cb.value);
-  renderModules(selected);
+  const checkedSystems = Array.from(document.querySelectorAll('input[name="systems"]:checked')).map(cb => cb.value);
+  renderModules(checkedSystems);
 });
 
 function renderModules(selectedSystems) {
   modulesContainer.innerHTML = '';
   selectedSystems.forEach(system => {
-    const div = document.createElement('div');
-    div.className = 'module';
-    div.innerHTML = `
+    const moduleDiv = document.createElement('div');
+    moduleDiv.className = 'module';
+    moduleDiv.innerHTML = `
       <h2>${system} 系统模块调查 / แบบสอบถามระบบ ${system}</h2>
 
       <label>每天大约使用 ${system} 系统多少次？ / คุณใช้งานระบบ ${system} วันละกี่ครั้ง?</label>
@@ -90,7 +96,7 @@ function renderModules(selectedSystems) {
         <option value="5 次以上 / มากกว่า 5 ครั้ง">5 次以上 / มากกว่า 5 ครั้ง</option>
       </select>
 
-      <label>每次操作平均耗时多久？ / ใช้เวลาต่อครั้งโดยประมาณเท่าไหร่</label>
+      <label>每次操作该系统平均耗时多久？ / ใช้เวลาต่อครั้งโดยประมาณเท่าไหร่</label>
       <select name="${system}_duration" required>
         <option value="">请选择 / โปรดเลือก</option>
         <option value="<5 分钟 / <5 นาที"><5 分钟 / <5 นาที</option>
@@ -99,14 +105,14 @@ function renderModules(selectedSystems) {
         <option value=">30 分钟 / >30 นาที">>30 分钟 / >30 นาที</option>
       </select>
 
-      <label>是否能独立完成操作？ / คุณสามารถทำงานเองโดยไม่ต้องพึ่ง IT หรือฝ่ายอื่นหรือไม่?</label>
+      <label>是否能独立完成日常操作（无需 IT 或跨部门协助）？ / คุณสามารถทำงานเองโดยไม่ต้องพึ่ง IT หรือฝ่ายอื่นหรือไม่?</label>
       <select name="${system}_independent" required>
         <option value="">请选择 / โปรดเลือก</option>
         <option value="完全独立 / ใช้ได้ด้วยตนเองทั้งหมด">完全独立 / ใช้ได้ด้วยตนเองทั้งหมด</option>
-        <option value="大部分独立 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง">大部分独立 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง</option>
+        <option value="大部分独立，偶尔需要协助 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง">大部分独立，偶尔需要协助 / ส่วนใหญ่ใช้ได้ ต้องการความช่วยเหลือบางครั้ง</option>
         <option value="经常需要 IT 协助 / ต้องพึ่ง IT บ่อยครั้ง">经常需要 IT 协助 / ต้องพึ่ง IT บ่อยครั้ง</option>
         <option value="经常需要跨部门协作 / ต้องพึ่งฝ่ายอื่นบ่อยครั้ง">经常需要跨部门协作 / ต้องพึ่งฝ่ายอื่นบ่อยครั้ง</option>
-        <option value="完全不能独立 / ไม่สามารถใช้งานเองได้">完全不能独立 / ไม่สามารถใช้งานเองได้</option>
+        <option value="完全不能独立完成 / ไม่สามารถใช้งานเองได้">完全不能独立完成 / ไม่สามารถใช้งานเองได้</option>
       </select>
 
       <label>每天大约需要多少次 IT 协助？ / ต้องพึ่ง IT ประมาณกี่ครั้งต่อวัน</label>
@@ -120,60 +126,47 @@ function renderModules(selectedSystems) {
       </select>
 
       <label>需要 IT 协助的主要原因（可多选） / สาเหตุหลักที่ต้องพึ่ง IT (เลือกได้หลายข้อ)</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="操作不熟 / ไม่คุ้นเคยการใช้งาน"> 操作不熟 / ไม่คุ้นเคยการใช้งาน</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug"> 功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="数据不正确 / ข้อมูลไม่ถูกต้อง"> 数据不正确 / ข้อมูลไม่ถูกต้อง</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="权限问题 / ปัญหาสิทธิ์"> 权限问题 / ปัญหาสิทธิ์</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="流程跨部门 / กระบวนการต้องประสานกับฝ่ายอื่น"> 流程跨部门 / กระบวนการต้องประสานกับฝ่ายอื่น</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="紧急问题 / ปัญหาเร่งด่วน"> 紧急问题 / ปัญหาเร่งด่วน</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="系统操作不熟 / ไม่คุ้นเคยการใช้งาน"> 系统操作不熟 / ไม่คุ้นเคยการใช้งาน</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="系统功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug"> 系统功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="数据不正确 / ข้อมูลไม่ถูกต้อง"> 数据不正确 / ข้อมูล不正确</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="权限问题 / ปัญหาสิทธิ์"> 权限问题 / 权限问题</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="流程需要跨部门沟通 / กระบวนการต้องประสานกับฝ่ายอื่น"> 流程需要跨部门沟通 / 流程需要跨部门沟通</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="紧急问题（需当天解决） / ปัญหาเร่งด่วน (ต้องแก้ไขภายในวันเดียว)"> 紧急问题（需当天解决） / 紧急问题（需当天解决）</label>
       <label><input type="checkbox" name="${system}_it_reason" value="其他 / อื่นๆ"> 其他 / อื่นๆ</label>
 
-      <label>使用该系统是否需与其他部门沟通？ / ในการใช้งานระบบนี้ ต้องประสานงานกับฝ่ายอื่นหรือไม่?</label>
+      <label>在使用该系统完成工作时，是否需要与其他部门沟通？ / ในการใช้งานระบบนี้ ต้องประสานงานกับฝ่ายอื่นหรือไม่?</label>
       <select name="${system}_cross_department" required>
         <option value="">请选择 / โปรดเลือก</option>
         <option value="经常需要 / ต้องประสานบ่อยครั้ง">经常需要 / ต้องประสานบ่อยครั้ง</option>
         <option value="偶尔需要 / บางครั้ง">偶尔需要 / บางครั้ง</option>
-        <option value="基本不需要 / แทบไม่ต้อง">基本不需要 / แทบไม่ต้อง</option>
+        <option value="基本不需要 / แทบไม่ต้อง">基本不需要 / 基本不需要</option>
       </select>
 
-      <label>整体满意度（1-5） / คุณพอใจกับระบบมากน้อยแค่ไหน (1-5)</label>
+      <label>您对该系统的整体满意度如何？（1=非常不满意，5=非常满意） / คุณพอใจกับระบบมากน้อยแค่ไหน (1=ไม่พอใจมาก,5=พอใจมาก)</label>
       <select name="${system}_satisfaction" required>
         <option value="">请选择 / โปรดเลือก</option>
-        <option value="1">1</option>
+        <option value="1">1 - 非常不满意 / ไม่พอใจมาก</option>
         <option value="2">2</option>
         <option value="3">3</option>
         <option value="4">4</option>
-        <option value="5">5</option>
+        <option value="5">5 - 非常满意 / พอใจมาก</option>
       </select>
 
-      <label>希望系统改进的方面（可多选） / ระบบควรพัฒนาด้านใด (เลือกได้หลายข้อ)</label>
-      <label><input type="checkbox" name="${system}_improve" value="功能 / ฟังก์ชัน"> 功能 / ฟังก์ชัน</label>
-      <label><input type="checkbox" name="${system}_improve" value="流程 / กระบวนการ"> 流程 / กระบวนการ</label>
-      <label><input type="checkbox" name="${system}_improve" value="培训 / การฝึกอบรม"> 培训 / การฝึกอบรม</label>
-      <label><input type="checkbox" name="${system}_improve" value="界面 / ส่วนติดต่อผู้ใช้"> 界面 / ส่วนติดต่อผู้ใช้</label>
-      <label><input type="checkbox" name="${system}_improve" value="权限 / สิทธิ์"> 权限 / สิทธิ์</label>
-      <label><input type="checkbox" name="${system}_improve" value="其他 / อื่นๆ"> 其他 / อื่นๆ</label>
+      <label>希望系统在哪些方面改进（可多选） / ระบบควรพัฒนาด้านใด (เลือกได้หลายข้อ)</label>
+      <label><input type="checkbox" name="${system}_improve" value="功能 / ฟังก์ชัน"> 功能 / 功能</label>
+      <label><input type="checkbox" name="${system}_improve" value="流程 / กระบวนการ"> 流程 / 流程</label>
+      <label><input type="checkbox" name="${system}_improve" value="培训 / การฝึกอบรม"> 培训 / 培训</label>
+      <label><input type="checkbox" name="${system}_improve" value="界面 / ส่วนติดต่อผู้ใช้"> 界面 / 界面</label>
+      <label><input type="checkbox" name="${system}_improve" value="权限 / สิทธิ์"> 权限 / 权限</label>
+      <label><input type="checkbox" name="${system}_improve" value="其他 / อื่นๆ"> 其他 / 其他</label>
 
-      <label>最希望该系统解决的问题 / 线下痛点 / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข</label>
+      <label>您最希望该系统或新系统能帮您解决的问题是什么？（可包括线下流程痛点） / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข (รวมถึงกระบวนการปัจจุบันที่ยังทำแบบออฟไลน์)</label>
       <textarea name="${system}_wish" rows="3"></textarea>
     `;
-    modulesContainer.appendChild(div);
+    modulesContainer.appendChild(moduleDiv);
   });
 }
-
-// 提交提示
-const form = document.getElementById('surveyForm');
-const iframe = document.querySelector('iframe[name="hidden_iframe"]');
-iframe.onload = function() {
-  if (!form._submitted) return;
-  alert("表单已提交，谢谢参与 / ขอบคุณสำหรับการตอบแบบสอบถาม");
-  form.reset();
-  modulesContainer.innerHTML = '';
-  form._submitted = false;
-};
-form.addEventListener('submit', function() {
-  form._submitted = true;
-});
 </script>
+
 </body>
 </html>

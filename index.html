@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>乖宝工厂系统使用调查）</title>
+<title>乖宝工厂系统使用调查（匿名）</title>
 <style>
   body { font-family: Arial, sans-serif; margin: 20px; }
   h1 { font-size: 1.5em; margin-bottom: 10px; }
@@ -25,7 +25,7 @@
 
   <!-- 部门选择 -->
   <label>您所在的部门 / แผนกของคุณ</label>
-  <select id="department" required>
+  <select id="department" name="department" required>
     <option value="">请选择部门 / โปรดเลือกแผนก</option>
     <option value="生产 / Production">生产 / Production</option>
     <option value="品质 / Quality">品质 / Quality</option>
@@ -125,10 +125,10 @@ function renderModules(selectedSystems) {
       <label>需要 IT 协助的主要原因（可多选） / สาเหตุหลักที่ต้องพึ่ง IT (เลือกได้หลายข้อ)</label>
       <label><input type="checkbox" name="${system}_it_reason" value="系统操作不熟 / ไม่คุ้นเคยการใช้งาน"> 系统操作不熟 / ไม่คุ้นเคยการใช้งาน</label>
       <label><input type="checkbox" name="${system}_it_reason" value="系统功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug"> 系统功能不足 / Bug / ฟังก์ชันไม่ครบ / Bug</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="数据不正确 / ข้อมูลไม่ถูกต้อง"> 数据不正确 / ข้อมูลไม่ถูกต้อง</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="权限问题 / ปัญหาสิทธิ์"> 权限问题 / ปัญหาสิทธิ์</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="流程需要跨部门沟通 / กระบวนการต้องประสานกับฝ่ายอื่น"> 流程需要跨部门沟通 / กระบวนการต้องประสานกับฝ่ายอื่น</label>
-      <label><input type="checkbox" name="${system}_it_reason" value="紧急问题（需当天解决） / ปัญหาเร่งด่วน (ต้องแก้ไขภายในวันเดียว)"> 紧急问题（需当天解决） / ปัญหาเร่งด่วน (ต้องแก้ไขภายในวันเดียว)</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="数据不正确 / ข้อมูลไม่ถูกต้อง"> 数据不正确 / ข้อมูล不正确</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="权限问题 / ปัญหาสิทธิ์"> 权限问题 / 权限问题</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="流程需要跨部门沟通 / กระบวนการต้องประสานกับฝ่ายอื่น"> 流程需要跨部门沟通 / 流程需要跨部门沟通</label>
+      <label><input type="checkbox" name="${system}_it_reason" value="紧急问题（需当天解决） / ปัญหาเร่งด่วน (ต้องแก้ไขภายในวันเดียว)"> 紧急问题（需当天解决） / 紧急问题（需当天解决）</label>
       <label><input type="checkbox" name="${system}_it_reason" value="其他 / อื่นๆ"> 其他 / อื่นๆ</label>
 
       <label>在使用该系统完成工作时，是否需要与其他部门沟通？ / ในการใช้งานระบบนี้ ต้องประสานงานกับฝ่ายอื่นหรือไม่?</label>
@@ -136,13 +136,13 @@ function renderModules(selectedSystems) {
         <option value="">请选择 / โปรดเลือก</option>
         <option value="经常需要 / ต้องประสานบ่อยครั้ง">经常需要 / ต้องประสานบ่อยครั้ง</option>
         <option value="偶尔需要 / บางครั้ง">偶尔需要 / บางครั้ง</option>
-        <option value="基本不需要 / แทบไม่ต้อง">基本不需要 / แทบไม่ต้อง</option>
+        <option value="基本不需要 / แทบไม่ต้อง">基本不需要 / 基本不需要</option>
       </select>
 
       <label>您对该系统的整体满意度如何？（1=非常不满意，5=非常满意） / คุณพอใจกับระบบมากน้อยแค่ไหน (1=ไม่พอใจมาก,5=พอใจมาก)</label>
       <select name="${system}_satisfaction" required>
         <option value="">请选择 / โปรดเลือก</option>
-        <option value="1">1 - 非常不满意 / ไม่พอใจมาก</option>
+        <option value="1">1 - 非常不满意 / 不满意</option>
         <option value="2">2</option>
         <option value="3">3</option>
         <option value="4">4</option>
@@ -150,12 +150,12 @@ function renderModules(selectedSystems) {
       </select>
 
       <label>希望系统在哪些方面改进（可多选） / ระบบควรพัฒนาด้านใด (เลือกได้หลายข้อ)</label>
-      <label><input type="checkbox" name="${system}_improve" value="功能 / ฟังก์ชัน"> 功能 / ฟังก์ชัน</label>
-      <label><input type="checkbox" name="${system}_improve" value="流程 / กระบวนการ"> 流程 / กระบวนการ</label>
-      <label><input type="checkbox" name="${system}_improve" value="培训 / การฝึกอบรม"> 培训 / การฝึกอบรม</label>
-      <label><input type="checkbox" name="${system}_improve" value="界面 / ส่วนติดต่อผู้ใช้"> 界面 / UI</label>
+      <label><input type="checkbox" name="${system}_improve" value="功能 / ฟังก์ชัน"> 功能 / 功能</label>
+      <label><input type="checkbox" name="${system}_improve" value="流程 / กระบวนการ"> 流程 / 流程</label>
+      <label><input type="checkbox" name="${system}_improve" value="培训 / การฝึกอบรม"> 培训 / 培训</label>
+      <label><input type="checkbox" name="${system}_improve" value="界面 / ส่วนติดต่อผู้ใช้"> 界面 / 界面</label>
       <label><input type="checkbox" name="${system}_improve" value="权限 / สิทธิ์"> 权限 / 权限</label>
-      <label><input type="checkbox" name="${system}_improve" value="其他 / อื่นๆ"> 其他 / อื่นๆ</label>
+      <label><input type="checkbox" name="${system}_improve" value="其他 / อื่นๆ"> 其他 / 其他</label>
 
       <label>您最希望该系统或新系统能帮您解决的问题是什么？（可包括线下流程痛点） / ปัญหาหลักที่คุณ希望ให้ระบบหรือระบบใหม่ช่วยแก้ไข (รวมถึงกระบวนการปัจจุบันที่ยังทำแบบออฟไลน์)</label>
       <textarea name="${system}_wish" rows="3"></textarea>
@@ -164,16 +164,15 @@ function renderModules(selectedSystems) {
   });
 }
 
+// 表单提交
 document.getElementById('surveyForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
   const formData = new FormData(this);
-  // 转换为 JSON，方便 Apps Script 处理
   const jsonData = {};
   formData.forEach((value, key) => {
-    if (jsonData[key]) {
-      // 多选合并
-      if (Array.isArray(jsonData[key])) {
+    if(jsonData[key]){
+      if(Array.isArray(jsonData[key])){
         jsonData[key].push(value);
       } else {
         jsonData[key] = [jsonData[key], value];
@@ -183,7 +182,7 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
     }
   });
 
-  fetch("https://script.google.com/macros/s/AKfycbyhivc6CJKxL9UhhW7uW0XENHz1ct3jSi-7_pHMPhJw2T1wNM8q4qbVbaR5io2BV6xM/exec", {  // 替换为你的 Web App URL
+  fetch("https://script.google.com/macros/s/AKfycbyhivc6CJKxL9UhhW7uW0XENHz1ct3jSi-7_pHMPhJw2T1wNM8q4qbVbaR5io2BV6xM/exec", {
     method: "POST",
     body: JSON.stringify(jsonData),
     headers: {
@@ -195,7 +194,7 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
     if(res.status === "success"){
       alert("表单已提交，谢谢参与 / ขอบคุณสำหรับการตอบแบบสอบถาม");
       this.reset();
-      modulesContainer.innerHTML = '';  // 清空动态模块
+      modulesContainer.innerHTML = '';
     } else {
       alert("提交失败，请稍后再试 / ส่งไม่สำเร็จ โปรดลองใหม่อีกครั้ง");
       console.error(res.message);
@@ -206,12 +205,7 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
     console.error(err);
   });
 });
-
-
 </script>
 
 </body>
 </html>
-
-
-

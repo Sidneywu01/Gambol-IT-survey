@@ -164,15 +164,30 @@ function renderModules(selectedSystems) {
   });
 }
 
-// 表单提交事件
 document.getElementById('surveyForm').addEventListener('submit', function(e) {
-  e.preventDefault(); // 阻止默认提交
-  alert('表单已提交，谢谢参与 / แบบสอบถามถูกส่งเรียบร้อย ขอบคุณสำหรับการเข้าร่วม');
-  this.reset();
-  modulesContainer.innerHTML = '';
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vR4nYtG-9FZou-m1ejDaKJATPfht-W9_vZhoWMFAPlF9oSR_LM9kA__DmlobxUYVrYTRwrwfN6PPnu-/pubhtml", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.text())
+  .then(result => {
+    alert("表单已提交，谢谢参与 / ขอบคุณสำหรับการตอบแบบสอบถาม");
+    document.getElementById('surveyForm').reset();
+    modulesContainer.innerHTML = '';  // 清空动态模块
+  })
+  .catch(error => {
+    alert("提交失败，请稍后再试 / ส่งไม่สำเร็จ โปรดลองใหม่อีกครั้ง");
+    console.error(error);
+  });
 });
+
 </script>
 
 </body>
 </html>
+
 
